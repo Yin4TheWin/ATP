@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
+import sun.rmi.runtime.Log;
 
 import java.util.Iterator;
 
@@ -197,7 +198,8 @@ public class GameScreen implements Screen {
                         }
                     }
                     else{
-                        p.rectangle.x -= Gdx.graphics.getDeltaTime()/2;
+                        if(!isColliding(new Rectangle(p.rectangle.x - 1, p.rectangle.y, 48f, 64f)))
+                            p.rectangle.x -= Gdx.graphics.getDeltaTime()/2;
                         talk = false;
                         prefs.putFloat("playerx", p.rectangle.x);
                     }
@@ -225,7 +227,8 @@ public class GameScreen implements Screen {
                         }
                     }
                     else{
-                        p.rectangle.y -= Gdx.graphics.getDeltaTime()/2;
+                        if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y - 1, 48f, 64f)))
+                            p.rectangle.y -= Gdx.graphics.getDeltaTime()/2;
                         talk = false;
                         prefs.putFloat("playery", p.rectangle.y);
                     }
@@ -244,14 +247,15 @@ public class GameScreen implements Screen {
                                 talk = true;
                             } else {
                                 if(!isColliding(new Rectangle(p.rectangle.x + 1, p.rectangle.y, 48f, 64f)))
-                                p.rectangle.x += Gdx.graphics.getDeltaTime()/2;
+                                    p.rectangle.x += Gdx.graphics.getDeltaTime()/2;
                                 talk = false;
                                 prefs.putFloat("playerx", p.rectangle.x);
                             }
                         }
                     }
                     else{
-                        p.rectangle.x += Gdx.graphics.getDeltaTime()/2;
+                        if(!isColliding(new Rectangle(p.rectangle.x + 1, p.rectangle.y, 48f, 64f)))
+                            p.rectangle.x += Gdx.graphics.getDeltaTime()/2;
                         talk = false;
                         prefs.putFloat("playerx", p.rectangle.x);
                     }
@@ -270,15 +274,15 @@ public class GameScreen implements Screen {
                                 talk = true;
                             } else {
                                 if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f)))
-                                p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
+                                    p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
                                 talk = false;
                                 prefs.putFloat("playery", p.rectangle.y);
                             }
                         }
                     }
                     else{
-                        //if()
-                        p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
+                        if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f)))
+                            p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
                         talk = false;
                         prefs.putFloat("playery", p.rectangle.y);
                     }
@@ -462,6 +466,7 @@ public class GameScreen implements Screen {
         //collisionObjectLayer = (TiledMapTileLayer)map.getLayers().get(2);
         System.out.println(map.getLayers().getCount()+"");
         objects = map.getLayers().get("Object Layer 1").getObjects();
+        System.out.println(objects.getCount());
         System.out.println(map.getLayers().get("Object Layer 1").getObjects().toString());
     }
     //Don't worry about everything below this
@@ -497,6 +502,7 @@ public class GameScreen implements Screen {
     public boolean isColliding(Rectangle r){
             for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
                 Rectangle rectanglE = rectangleObject.getRectangle();
+               // System.out.println("E");
                 if(Intersector.overlaps(rectanglE, r)) {
                     System.out.println("collided");
                     return true;
