@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.nnmg.atp.GameScreen;
+import com.nnmg.atp.Main;
 
 public class BattleScreen implements Screen {
     final Main game;

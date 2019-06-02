@@ -13,6 +13,7 @@ public class Player {
     private int width;
     private int height;
     private Texture sprite;
+    Animation animation;
 
     //Variables for animation
     private Texture walkSheet;
