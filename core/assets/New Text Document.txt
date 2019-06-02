@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="playerx">335.01047</entry>
+<entry key="two">0</entry>
+<entry key="one">1</entry>
+<entry key="playery">256.77667</entry>
+<entry key="donLevel">100</entry>
+<entry key="morgLevel">100</entry>
+<entry key="ivanLevel">100</entry>
+<entry key="natLevel">100</entry>
+</properties>
