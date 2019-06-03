@@ -536,7 +536,16 @@ public class GameScreen implements Screen {
         @Override
         public boolean keyUp(int keycode) {
             switch(keycode){
-                
+                case Input.Keys.
+                        UP:
+                    p.rectangle.y=((p.rectangle.y + 63) / 64 ) * 64;
+                case Input.Keys
+                            .DOWN:
+                    p.rectangle.y-=p.rectangle.y%64;
+                case Input.Keys.LEFT:
+                    p.rectangle.x-=p.rectangle.x%64;
+                case Input.Keys.RIGHT:
+                    p.rectangle.x=((p.rectangle.x + 63) / 64 ) * 64;
             }
             return false;
         }
