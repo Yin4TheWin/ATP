@@ -53,6 +53,9 @@ public class GameScreen implements Screen {
     MapObjects objects;
     float dist;
     boolean upMove;
+    boolean leftMove;
+    boolean downMove;
+    boolean rightMove;
 
     @SuppressWarnings("GwtInconsistentSerializableClass")
     public enum NPC{
@@ -181,14 +184,13 @@ public class GameScreen implements Screen {
         if(!isTalking){
             if(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)){
                 //Loops through next 200 pixels individually to check collisions to allow pixel perfect ones
-                for(int x=0; x<400;x++) {
                     if(talkers.size>0) {
                         for (Rectangle r : talkers) {
                             if (new Rectangle(p.rectangle.x - 1, p.rectangle.y, 48f, 64f).overlaps(r)) {
                                 talk = true;
                             } else {
                                 if(!isColliding(new Rectangle(p.rectangle.x - 1, p.rectangle.y, 48f, 64f)))
-                                    p.rectangle.x -= Gdx.graphics.getDeltaTime()/2;
+                                    p.rectangle.x -= 100*Gdx.graphics.getDeltaTime();
                                 talk = false;
                                 prefs.putFloat("playerx", p.rectangle.x);
                             }
@@ -196,11 +198,10 @@ public class GameScreen implements Screen {
                     }
                     else{
                         if(!isColliding(new Rectangle(p.rectangle.x - 1, p.rectangle.y, 48f, 64f)))
-                            p.rectangle.x -= Gdx.graphics.getDeltaTime()/2;
+                            p.rectangle.x -= 100*Gdx.graphics.getDeltaTime();
                         talk = false;
                         prefs.putFloat("playerx", p.rectangle.x);
                     }
-                }
                 //Changes default image to face left if you stop moving
                 stayStill=new Texture(Gdx.files.internal("staticLeft.png"));
                 if(!(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S))){
@@ -210,14 +211,13 @@ public class GameScreen implements Screen {
             }
             if(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)){
                 //Loops through next 200 pixels individually to check collisions to allow pixel perfect ones
-                for(int x=0; x<400;x++) {
                     if(talkers.size>0) {
                         for (Rectangle r : talkers) {
                             if (new Rectangle(p.rectangle.x, p.rectangle.y - 1, 48f, 64f).overlaps(r)) {
                                 talk = true;
                             } else {
                                 if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y - 1, 48f, 64f)))
-                                    p.rectangle.y -= Gdx.graphics.getDeltaTime()/2;
+                                    p.rectangle.y -= 100*Gdx.graphics.getDeltaTime();
                                 talk = false;
                                 prefs.putFloat("playery", p.rectangle.y);
                             }
@@ -225,11 +225,10 @@ public class GameScreen implements Screen {
                     }
                     else{
                         if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y - 1, 48f, 64f)))
-                            p.rectangle.y -= Gdx.graphics.getDeltaTime()/2;
+                            p.rectangle.y -= 100*Gdx.graphics.getDeltaTime();
                         talk = false;
                         prefs.putFloat("playery", p.rectangle.y);
                     }
-                }
                 stayStill=new Texture(Gdx.files.internal("static.png"));
                 if(!(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D))){
                     animateMove(p.downAnim);
@@ -237,14 +236,13 @@ public class GameScreen implements Screen {
             }
             if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)){
                 //Loops through next 200 pixels individually to check collisions to allow pixel perfect ones
-                for(int x=0; x<400;x++) {
                     if(talkers.size>0) {
                         for (Rectangle r : talkers) {
                             if (new Rectangle(p.rectangle.x + 1, p.rectangle.y, 48f, 64f).overlaps(r)) {
                                 talk = true;
                             } else {
                                 if(!isColliding(new Rectangle(p.rectangle.x + 1, p.rectangle.y, 48f, 64f)))
-                                    p.rectangle.x += Gdx.graphics.getDeltaTime()/2;
+                                    p.rectangle.x += 100*Gdx.graphics.getDeltaTime();
                                 talk = false;
                                 prefs.putFloat("playerx", p.rectangle.x);
                             }
@@ -256,7 +254,6 @@ public class GameScreen implements Screen {
                         talk = false;
                         prefs.putFloat("playerx", p.rectangle.x);
                     }
-                }
                 stayStill=new Texture(Gdx.files.internal("staticRight.png"));
                 if(!(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W))){
                     animateMove(p.rightAnim);
@@ -269,6 +266,7 @@ public class GameScreen implements Screen {
                             if (new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f).overlaps(r)) {
                                 talk = true;
                             } else {
+                                if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y+1, 48f, 64f)))
                                 p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
                                 talk = false;
                                 prefs.putFloat("playery", p.rectangle.y);
@@ -276,6 +274,7 @@ public class GameScreen implements Screen {
                         }
                     }
                     else{
+                        if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y+1, 48f, 64f)))
                         p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
                         talk = false;
                         prefs.putFloat("playery", p.rectangle.y);
@@ -285,12 +284,37 @@ public class GameScreen implements Screen {
             }
             if(upMove){
                 if(p.rectangle.y<dist) {
-                    p.rectangle.y += 10*Gdx.graphics.getDeltaTime();
+                    p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
                 }
                 animateMove(p.upAnim);
+                if(p.rectangle.y>=dist)
+                    upMove=false;
             }
-            upMove=false;
-            if(!(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)||Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)))
+            if(leftMove){
+                if(p.rectangle.x>dist) {
+                    p.rectangle.x -= 100*Gdx.graphics.getDeltaTime();
+                }
+                animateMove(p.leftAnim);
+                if(p.rectangle.x<=dist)
+                    leftMove=false;
+            }
+            if(downMove){
+                if(p.rectangle.y>dist) {
+                    p.rectangle.y -= 100*Gdx.graphics.getDeltaTime();
+                }
+                animateMove(p.downAnim);
+                if(p.rectangle.y<=dist)
+                    downMove=false;
+            }
+            if(rightMove){
+                if(p.rectangle.x<dist) {
+                    p.rectangle.x += 100*Gdx.graphics.getDeltaTime();
+                }
+                animateMove(p.rightAnim);
+                if(p.rectangle.x>=dist)
+                    rightMove=false;
+            }
+            if(!(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)||Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D))&&!upMove)
                //If no keys are being pressed, stand still.
                 batch.draw(stayStill, p.rectangle.x, p.rectangle.y);
 
@@ -550,12 +574,18 @@ public class GameScreen implements Screen {
                 case Input.Keys
                             .DOWN:
                     p.rectangle.y-=p.rectangle.y%64;
+                dist=p.rectangle.y-p.rectangle.y%64;
+                downMove=true;
                 break;
                 case Input.Keys.LEFT:
                     p.rectangle.x-=p.rectangle.x%64;
+                    dist=p.rectangle.x-p.rectangle.x%64;
+                    leftMove=true;
                     break;
                 case Input.Keys.RIGHT:
                     p.rectangle.x=((p.rectangle.x + 63) / 64 ) * 64;
+                    dist=((p.rectangle.x + 63) / 64 ) * 64;
+                    rightMove=true;
                     break;
             }
             return false;
