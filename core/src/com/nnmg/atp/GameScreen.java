@@ -1,9 +1,6 @@
 package com.nnmg.atp;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
@@ -47,12 +44,8 @@ public class GameScreen implements Screen {
     private boolean talkHelper;
     private TiledMapRenderer tiledMapRenderer;
     private Preferences prefs;
-    private Animation<TextureRegion>  swordAnims;
     private Texture stayStill;
-    private Texture sword;
-    private boolean slash;
     private float stateTime;
-    private float stateTime1;
     private int push;
     int objectLayerId;
     boolean collide;
@@ -100,6 +93,9 @@ public class GameScreen implements Screen {
         //Instantiate images. Walk is a spritesheet
         walkSheet=new Texture(Gdx.files.internal("walk.png"));
         stayStill=new Texture(Gdx.files.internal("static.png"));
+
+        MyInputProcessor inputProcessor = new MyInputProcessor();
+        Gdx.input.setInputProcessor(inputProcessor);
 
         //Add each individual sprite from each row into an array for animating (Don't worry about this)
 
@@ -154,7 +150,6 @@ public class GameScreen implements Screen {
         //Clears screen
         Gdx.gl.glClearColor(0.2f, 1, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         //Refreshes screen, I believe it's 60 fps
         camera.update();
         tiledMapRenderer.setView(camera);
@@ -532,4 +527,49 @@ public class GameScreen implements Screen {
         tb.setHeight(120);
         tb.setVisible(true);
     }
+    public class MyInputProcessor implements InputProcessor {
+        @Override
+        public boolean keyDown(int keycode) {
+            return false;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            switch(keycode){
+                
+            }
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char character) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int screenX, int screenY, int pointer) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int screenX, int screenY) {
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(int amount) {
+            return false;
+        }
+    }
+
 }
