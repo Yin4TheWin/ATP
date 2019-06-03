@@ -51,6 +51,8 @@ public class GameScreen implements Screen {
     boolean collide;
     Player p;
     MapObjects objects;
+    float dist;
+    boolean upMove;
 
     @SuppressWarnings("GwtInconsistentSerializableClass")
     public enum NPC{
@@ -102,6 +104,7 @@ public class GameScreen implements Screen {
         //Instantiate animations at duration 0.15f
         isTalking=false;
         this.game=game;
+        dist=0;
         //This is for loading maps. To see a full documentation on how maps are loaded check the "Wiki" tab on the Github.
         one=prefs.getInteger("one",1);
         two=prefs.getInteger("two", 0);
@@ -109,8 +112,7 @@ public class GameScreen implements Screen {
         camera=new OrthographicCamera();
         camera.setToOrtho(false, 832, 512);
         camera.update();
-
-
+        upMove=false;
         //Instantiates batch, a group of sprites
         batch = new SpriteBatch();
         //Instantiates player and enemy images
@@ -262,32 +264,36 @@ public class GameScreen implements Screen {
             }
             if(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)){
                 //Loops through next 200 pixels individually to check collisions to allow pixel perfect ones
-                for(int x=0; x<400;x++) {
                     if(talkers.size>0) {
                         for (Rectangle r : talkers) {
                             if (new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f).overlaps(r)) {
                                 talk = true;
                             } else {
-                                if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f)))
-                                    p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
+                                p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
                                 talk = false;
                                 prefs.putFloat("playery", p.rectangle.y);
                             }
                         }
                     }
                     else{
-                        if(!isColliding(new Rectangle(p.rectangle.x, p.rectangle.y + 1, 48f, 64f)))
-                            p.rectangle.y += Gdx.graphics.getDeltaTime()/2;
+                        p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
                         talk = false;
                         prefs.putFloat("playery", p.rectangle.y);
                     }
-                }
                 stayStill=new Texture(Gdx.files.internal("staticUp.png"));
+                    animateMove(p.upAnim);
+            }
+            if(upMove){
+                if(p.rectangle.y<dist) {
+                    p.rectangle.y += 10*Gdx.graphics.getDeltaTime();
+                }
                 animateMove(p.upAnim);
             }
+            upMove=false;
             if(!(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)||Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D)))
                //If no keys are being pressed, stand still.
                 batch.draw(stayStill, p.rectangle.x, p.rectangle.y);
+
         }
         else
             //If being talked to, stand still
@@ -538,14 +544,19 @@ public class GameScreen implements Screen {
             switch(keycode){
                 case Input.Keys.
                         UP:
-                    p.rectangle.y=((p.rectangle.y + 63) / 64 ) * 64;
+                    dist=((p.rectangle.y + 63) / 64 ) * 64;
+                upMove=true;
+                break;
                 case Input.Keys
                             .DOWN:
                     p.rectangle.y-=p.rectangle.y%64;
+                break;
                 case Input.Keys.LEFT:
                     p.rectangle.x-=p.rectangle.x%64;
+                    break;
                 case Input.Keys.RIGHT:
                     p.rectangle.x=((p.rectangle.x + 63) / 64 ) * 64;
+                    break;
             }
             return false;
         }
