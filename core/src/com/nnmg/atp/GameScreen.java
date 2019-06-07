@@ -51,7 +51,10 @@ public class GameScreen implements Screen {
     boolean collide;
     Player p;
     MapObjects objects;
-    float dist;
+    float upDist;
+    float leftDist;
+    float downDist;
+    float rightDist;
     boolean upMove;
     boolean leftMove;
     boolean downMove;
@@ -107,7 +110,10 @@ public class GameScreen implements Screen {
         //Instantiate animations at duration 0.15f
         isTalking=false;
         this.game=game;
-        dist=0;
+        upDist=0;
+        leftDist=0;
+        downDist=0;
+        rightDist=0;
         //This is for loading maps. To see a full documentation on how maps are loaded check the "Wiki" tab on the Github.
         one=prefs.getInteger("one",1);
         two=prefs.getInteger("two", 0);
@@ -283,35 +289,35 @@ public class GameScreen implements Screen {
                     animateMove(p.upAnim);
             }
             if(upMove){
-                if(p.rectangle.y<dist) {
-                    p.rectangle.y += 100*Gdx.graphics.getDeltaTime();
+                if(p.rectangle.y<upDist) {
+                    p.rectangle.y = upDist;
                 }
                 animateMove(p.upAnim);
-                if(p.rectangle.y>=dist)
+                if(p.rectangle.y>=upDist)
                     upMove=false;
             }
             if(leftMove){
-                if(p.rectangle.x>dist) {
+                if(p.rectangle.x>leftDist) {
                     p.rectangle.x -= 100*Gdx.graphics.getDeltaTime();
                 }
                 animateMove(p.leftAnim);
-                if(p.rectangle.x<=dist)
+                if(p.rectangle.x<=leftDist)
                     leftMove=false;
             }
             if(downMove){
-                if(p.rectangle.y>dist) {
+                if(p.rectangle.y>downDist) {
                     p.rectangle.y -= 100*Gdx.graphics.getDeltaTime();
                 }
                 animateMove(p.downAnim);
-                if(p.rectangle.y<=dist)
+                if(p.rectangle.y<=downDist)
                     downMove=false;
             }
             if(rightMove){
-                if(p.rectangle.x<dist) {
+                if(p.rectangle.x<rightDist) {
                     p.rectangle.x += 100*Gdx.graphics.getDeltaTime();
                 }
                 animateMove(p.rightAnim);
-                if(p.rectangle.x>=dist)
+                if(p.rectangle.x>=rightDist)
                     rightMove=false;
             }
             if(!(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A)||Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W)||Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S)||Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D))&&!upMove)
@@ -568,23 +574,23 @@ public class GameScreen implements Screen {
             switch(keycode){
                 case Input.Keys.
                         UP:
-                    dist=((p.rectangle.y + 63) / 64 ) * 64;
+                    upDist=((p.rectangle.y + 63) / 64 ) * 64;
                 upMove=true;
                 break;
                 case Input.Keys
                             .DOWN:
                     p.rectangle.y-=p.rectangle.y%64;
-                dist=p.rectangle.y-p.rectangle.y%64;
+                downDist=p.rectangle.y-p.rectangle.y%64;
                 downMove=true;
                 break;
                 case Input.Keys.LEFT:
                     p.rectangle.x-=p.rectangle.x%64;
-                    dist=p.rectangle.x-p.rectangle.x%64;
+                    leftDist=p.rectangle.x-p.rectangle.x%64;
                     leftMove=true;
                     break;
                 case Input.Keys.RIGHT:
                     p.rectangle.x=((p.rectangle.x + 63) / 64 ) * 64;
-                    dist=((p.rectangle.x + 63) / 64 ) * 64;
+                    rightDist=((p.rectangle.x + 63) / 64 ) * 64;
                     rightMove=true;
                     break;
             }
